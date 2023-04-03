@@ -96,7 +96,7 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\GoToHandlerForSymbolCommand.png" />
+    <Content Include="Resources\blue-arrow-16x16.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,4 +10,4 @@ If you right-click on the command identifier, the option '**Go to Handler**' wil
 
 For example:
 
-![Screenshot (219)](https://user-images.githubusercontent.com/10000048/229503550-9c6c1d69-848e-4a14-b960-2ba30f4ef448.png)
+![Screenshot (222)](https://user-images.githubusercontent.com/10000048/229534304-54be42da-f200-4e2f-a35a-4d4e86991626.png)
