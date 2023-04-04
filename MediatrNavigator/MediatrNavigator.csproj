@@ -100,7 +100,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\blue-arrow-16x16.ico" />
-    <Content Include="Resources\mediatr-navigator-image.png" />
+    <Content Include="Resources\mediatr-navigator-icon.png" />
+    <Content Include="Resources\mediatr-navigator-icon128x128.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
