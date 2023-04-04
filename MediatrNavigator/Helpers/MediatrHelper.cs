@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using MediatrNavigator.Helpers.TypeSymbolHandlers;
+using MediatrNavigator.Extensions;
 
 namespace MediatrNavigator.Helpers
 {
@@ -70,12 +71,11 @@ namespace MediatrNavigator.Helpers
 
             IEnumerable<ReferencedSymbol> references = await SymbolFinder.FindReferencesAsync(commandClassSymbol, workspace.CurrentSolution);
 
-            return await FindSymbolsForReferencesAsync(references, compilation, commandClassSymbol, baseHandlerInterfaceSymbol);
+            return await FindSymbolsForReferencesAsync(references, commandClassSymbol, baseHandlerInterfaceSymbol);
         }
 
         public static async Task<INamedTypeSymbol> FindSymbolsForReferencesAsync(
             IEnumerable<ReferencedSymbol> references,
-            Compilation compilation,
             INamedTypeSymbol commandClassSymbol,
             INamedTypeSymbol baseHandlerInterfaceSymbol)
         {
@@ -83,7 +83,7 @@ namespace MediatrNavigator.Helpers
             {
                 SyntaxTree syntaxTree = await location.Document.GetSyntaxTreeAsync();
                 var classDeclarations = (await syntaxTree.GetRootAsync()).DescendantNodes().OfType<ClassDeclarationSyntax>();
-                var semanticModel = compilation.GetSemanticModel(syntaxTree);
+                var semanticModel = await location.Document.GetSemanticModelAsync();
 
                 foreach (var classDeclaration in classDeclarations)
                 {
@@ -116,7 +116,7 @@ namespace MediatrNavigator.Helpers
 
         private static bool IsCommandInTypeArguments(INamedTypeSymbol commandClassSymbol, ImmutableArray<ITypeSymbol> typeArguments)
         {
-            return typeArguments.Length == 2 && typeArguments[0].Equals(commandClassSymbol, SymbolEqualityComparer.Default);
+            return typeArguments.Length == 2 && typeArguments[0].AreEquivalent(commandClassSymbol);
         }
 
         public static bool IsMediatrCommand(INamedTypeSymbol classSymbol)

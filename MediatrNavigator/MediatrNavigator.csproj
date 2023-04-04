@@ -46,6 +46,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Commands\GoToHandlerForSymbolCommand.cs" />
+    <Compile Include="Extensions\IAssemblySymbolExtensions.cs" />
+    <Compile Include="Extensions\INamespaceSymbolExtensions.cs" />
+    <Compile Include="Extensions\ITypeSymbolExtensions.cs" />
     <Compile Include="Helpers\ActiveDocumentAnalyzer.cs" />
     <Compile Include="Helpers\ActiveDocumentInfo.cs" />
     <Compile Include="Helpers\MediatrHelper.cs" />
