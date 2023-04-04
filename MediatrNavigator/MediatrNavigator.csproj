@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\blue-arrow-16x16.ico" />
+    <Content Include="Resources\mediatr-navigator-image.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
