@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using EnvDTE80;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Shell;
 using System;
@@ -19,7 +20,76 @@ namespace MediatrNavigator.Helpers
 
             foreach (EnvDTE.Project project in dte.Solution.Projects)
             {
-                ProjectItem projectItem = FindProjectItemByFilePath(project.ProjectItems, filePath);
+
+                ProjectItem projectItem = FindProjectItemInProject(project, filePath);
+                if (projectItem != null)
+                {
+                    return projectItem;
+                }
+            }
+
+            return null;
+        }
+
+        private static ProjectItem FindProjectItemInProject(EnvDTE.Project project, string filePath)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (project == null)
+            {
+                return null;
+            }
+
+            foreach (ProjectItem item in project.ProjectItems)
+            {
+                ProjectItem foundItem = FindProjectItemInProjectItem(item, filePath);
+                if (foundItem != null)
+                {
+                    return foundItem;
+                }
+            }
+            
+            if (project.Kind == ProjectKinds.vsProjectKindSolutionFolder)
+            {
+                foreach (ProjectItem item in project.ProjectItems)
+                {
+                    ProjectItem subProjectItem = FindProjectItemInProjectItem(item, filePath);
+                    if (subProjectItem != null)
+                    {
+                        return subProjectItem;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static ProjectItem FindProjectItemInProjectItem(ProjectItem item, string filePath)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (item.FileCount > 0
+                    && item.Kind == ProjectItemKinds.vsPhysicalFile
+                    && item.FileNames[0].Equals(filePath, StringComparison.OrdinalIgnoreCase))
+            {
+                return item;
+            }
+
+            if (item.ProjectItems != null)
+            {
+                foreach (ProjectItem subItem in item.ProjectItems)
+                {
+                    ProjectItem foundSubItem = FindProjectItemInProjectItem(subItem, filePath);
+                    if (foundSubItem != null)
+                    {
+                        return foundSubItem;
+                    }
+                }
+            }
+
+            if (item.SubProject != null)
+            {
+                ProjectItem projectItem = FindProjectItemInProject(item.SubProject, filePath);
                 if (projectItem != null)
                 {
                     return projectItem;
@@ -46,32 +116,6 @@ namespace MediatrNavigator.Helpers
             Window window = projectItem.Open(Constants.vsViewKindCode);
             window.Visible = true;
             window.Activate();
-        }
-
-        private static ProjectItem FindProjectItemByFilePath(ProjectItems projectItems, string filePath)
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            if (projectItems == null)
-            {
-                return null;
-            }
-
-            foreach (ProjectItem projectItem in projectItems)
-            {
-                if (projectItem.FileCount > 0 && string.Equals(projectItem.FileNames[0], filePath, StringComparison.OrdinalIgnoreCase))
-                {
-                    return projectItem;
-                }
-
-                ProjectItem foundProjectItem = FindProjectItemByFilePath(projectItem.ProjectItems, filePath);
-                if (foundProjectItem != null)
-                {
-                    return foundProjectItem;
-                }
-            }
-
-            return null;
         }
     }
 }
